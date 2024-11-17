@@ -44,6 +44,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap:1rem;
 }
 
 main {
@@ -75,7 +76,7 @@ main {
   display:flex;
   align-items: center;
   justify-content: center;
-  background: conic-gradient(from 0deg, white 0%, green 0% 100%);
+  background: conic-gradient(from 0deg, white 0%, hsla(120, 100%, 25%, 0.781) 0% 100%);
 }
 
 .stop-watch::before, .stop-watch::after {
@@ -101,9 +102,9 @@ main {
 }
 
 .count-hand {
-  --width: 95px;
+  --width: 70px;
   width: var(--width);
-  height: 10px;
+  height: 5px;
   background: black;
   translate: calc(var(--width) / 2) 0;
   transform: rotate(-90deg);
