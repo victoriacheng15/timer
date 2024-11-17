@@ -7,70 +7,86 @@
   const stopwatch = document.querySelector(".stop-watch");
 
   let timer;
-  let timeRemaining = input.value * 60;
+  let timeRemaining = getInputTimeInSeconds();
   let isRunning = false;
+  const INITIAL_ROTATION = -90;
+  const BASE_COLOR = "white";
+  const ACTIVE_COLOR = "hsla(120, 100%, 25%, 0.5)";
+
+  function getInputTimeInSeconds() {
+    return input.value * 60 || 0;
+  }
+
+  function conicGrident(percenage) {
+    return `conic-gradient(from 0deg, ${BASE_COLOR} ${percenage}%, ${ACTIVE_COLOR} ${percenage}% 100%)`;
+  }
+
+  function calculateTime(equation) {
+    return String(Math.floor(equation)).padStart(2, "0");
+  }
 
   function updateDisplay() {
-    const minutes = String(Math.floor(timeRemaining / 60)).padStart(2, "0");
-    const seconds = String(Math.floor(timeRemaining % 60)).padStart(2, "0");
+    const minutes = calculateTime(timeRemaining / 60);
+    const seconds = calculateTime(timeRemaining % 60);
 
     displayTimer.textContent = `${minutes}:${seconds}`;
   }
 
   function updateHandRotate() {
-    const totalTime = input.value * 60;
+    const totalTime = getInputTimeInSeconds();
     const elapsedTime = totalTime - timeRemaining;
     const rotateDegree = (elapsedTime / totalTime) * 360;
     const percentage = (elapsedTime / totalTime) * 100;
 
-    hand.style.transform = `rotate(${-90 + rotateDegree}deg)`;
-    stopwatch.style.background = `conic-gradient(from 0deg, white ${percentage}%, hsla(120, 100%, 25%, 0.5) ${percentage}% 100%)`;
+    hand.style.transform = `rotate(${INITIAL_ROTATION + rotateDegree}deg)`;
+    stopwatch.style.background = conicGrident(percentage);
   }
 
   function timeInterval() {
     timeRemaining--;
-    updateDisplay();
-    updateHandRotate();
 
     if (timeRemaining <= 0) {
       clearInterval(timer);
-
-      isRunning = false;
+      resetTimer();
     }
+
+    updateDisplay();
+    updateHandRotate();
+  }
+
+  function startTimer() {
+    timer = setInterval(timeInterval, 1000);
+    isRunning = true;
+    toggleBtn.disabled = true;
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    isRunning = false;
+    toggleBtn.disabled = false;
   }
 
   function toggleTimer() {
-    if (isRunning) {
-      clearInterval(timer);
-      isRunning = false;
-    } else {
-      timer = setInterval(timeInterval, 1000);
-      isRunning = false;
-    }
+    isRunning ? stopTimer() : startTimer();
   }
 
   function resetTimer() {
-    clearInterval(timer);
-    timeRemaining = input.value * 60;
+    stopTimer();
+    timeRemaining = getInputTimeInSeconds();
     updateDisplay();
-    hand.style.transform = "rotate(-90deg)";
-    stopwatch.style.background =
-      "conic-gradient(from 0deg, white 0%, hsla(120, 100%, 25%, 0.5) 0% 100%)";
-    isRunning = false;
+
+    hand.style.transform = `rotate(${INITIAL_ROTATION}deg)`;
+    stopwatch.style.background = conicGrident(0);
   }
 
-  function typingInput() {
+  function onInputChange() {
     if (!isRunning) {
-      timeRemaining = input.value * 60 || 0;
+      timeRemaining = getInputTimeInSeconds();
       updateDisplay();
     }
   }
 
-  if (timeRemaining === 0) {
-    resetTimer();
-  }
-
-  input.addEventListener("input", typingInput);
+  input.addEventListener("input", onInputChange);
   toggleBtn.addEventListener("click", toggleTimer);
   resetBtn.addEventListener("click", resetTimer);
 
