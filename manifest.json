@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "A simple study timer",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "popup.html"
   },
   "permissions": [
     "activeTab"
