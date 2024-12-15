@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Timer",
   "version": "1.0.0",
-  "description": "A simple study timer",
+  "description": "A simple timer for work, study or anyting you need to stay top of.",
   "action": {
     "default_popup": "popup/popup.html"
   },
